@@ -1,0 +1,8 @@
+# Default ignored files
+/.vscode/
+/.idea/
+*.iml
+/.idea/workspace.xml
+/.idea/shelf/
+/shelf/
+/workspace.xml
