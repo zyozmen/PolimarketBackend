@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.*;
@@ -19,7 +18,6 @@ import java.util.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -66,7 +64,6 @@ class EmpleadoControllerTest {
     }
 
     @Test
-    @WithMockUser
     void testCrearEmpleado() throws Exception {
         // Arrange
         when(empleadoService.crearEmpleado(any(CrearActualizarEmpleadoDTO.class)))
@@ -74,7 +71,6 @@ class EmpleadoControllerTest {
 
         // Act & Assert
         mockMvc.perform(post("/api/rrhh")
-                .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isCreated())
@@ -85,7 +81,6 @@ class EmpleadoControllerTest {
     }
 
     @Test
-    @WithMockUser
     void testObtenerTodosLosEmpleados() throws Exception {
         // Arrange
         List<EmpleadoDTO> empleados = Arrays.asList(empleadoDTO);
@@ -102,7 +97,6 @@ class EmpleadoControllerTest {
     }
 
     @Test
-    @WithMockUser
     void testObtenerEmpleadoPorId() throws Exception {
         // Arrange
         when(empleadoService.obtenerEmpleadoPorId(1234567890L))
@@ -119,7 +113,6 @@ class EmpleadoControllerTest {
     }
 
     @Test
-    @WithMockUser
     void testObtenerEmpleadoPorIdNoEncontrado() throws Exception {
         // Arrange
         when(empleadoService.obtenerEmpleadoPorId(9999L))
@@ -134,7 +127,6 @@ class EmpleadoControllerTest {
     }
 
     @Test
-    @WithMockUser
     void testActualizarEmpleado() throws Exception {
         // Arrange
         when(empleadoService.actualizarEmpleado(anyString(), any(CrearActualizarEmpleadoDTO.class)))
@@ -142,7 +134,6 @@ class EmpleadoControllerTest {
 
         // Act & Assert
         mockMvc.perform(put("/api/rrhh/jperez")
-                .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isOk())
@@ -153,7 +144,6 @@ class EmpleadoControllerTest {
     }
 
     @Test
-    @WithMockUser
     void testActualizarEmpleadoNoEncontrado() throws Exception {
         // Arrange
         when(empleadoService.actualizarEmpleado(anyString(), any(CrearActualizarEmpleadoDTO.class)))
@@ -161,7 +151,6 @@ class EmpleadoControllerTest {
 
         // Act & Assert
         mockMvc.perform(put("/api/rrhh/usuarioNoExiste")
-                .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isNotFound())
@@ -169,14 +158,12 @@ class EmpleadoControllerTest {
     }
 
     @Test
-    @WithMockUser
     void testEliminarEmpleado() throws Exception {
         // Arrange
         doNothing().when(empleadoService).eliminarEmpleado(1234567890L);
 
         // Act & Assert
         mockMvc.perform(delete("/api/rrhh/1234567890")
-                .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
@@ -184,7 +171,6 @@ class EmpleadoControllerTest {
     }
 
     @Test
-    @WithMockUser
     void testEliminarEmpleadoNoEncontrado() throws Exception {
         // Arrange
         doThrow(new RecursoNoEncontradoException("Empleado no encontrado"))
@@ -192,14 +178,12 @@ class EmpleadoControllerTest {
 
         // Act & Assert
         mockMvc.perform(delete("/api/rrhh/9999")
-                .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.codigo").value(404));
     }
 
     @Test
-    @WithMockUser
     void testHealthEndpoint() throws Exception {
         // Act & Assert
         mockMvc.perform(get("/api/rrhh/health")

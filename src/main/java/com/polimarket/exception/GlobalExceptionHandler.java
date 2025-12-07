@@ -59,6 +59,28 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * Maneja excepciones de credenciales inválidas (401)
+     *
+     * @param ex excepción lanzada
+     * @param request información de la solicitud
+     * @return ResponseEntity con ErrorDTO
+     */
+    @ExceptionHandler(CredencialesInvalidasException.class)
+    public ResponseEntity<ErrorDTO> manejarCredencialesInvalidas(
+            CredencialesInvalidasException ex,
+            WebRequest request) {
+
+        ErrorDTO errorDTO = new ErrorDTO(
+                HttpStatus.UNAUTHORIZED.value(),
+                "Credenciales Inválidas",
+                ex.getMessage(),
+                System.currentTimeMillis()
+        );
+
+        return new ResponseEntity<>(errorDTO, HttpStatus.UNAUTHORIZED);
+    }
+
+    /**
      * Maneja todas las demás excepciones no previstas (500)
      *
      * @param ex excepción lanzada

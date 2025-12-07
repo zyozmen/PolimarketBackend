@@ -17,7 +17,7 @@ import java.util.List;
  * Base path: /api/rrhh
  */
 @RestController
-@RequestMapping("/api/rrhh")
+@RequestMapping("/rrhh")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 public class EmpleadoController {
